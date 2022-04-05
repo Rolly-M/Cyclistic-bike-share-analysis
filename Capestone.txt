@@ -1,0 +1,281 @@
+---
+title: "Cyclistic Bike Report"
+author: "Rolly Mougoue"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, installing packages}
+install.packages("tidyverse")
+library(tidyverse)
+
+install.packages("lubridate")
+library(lubridate)
+
+install.packages("ggplot2")
+library(ggplot2)
+
+install.packages("dplyr")
+library(dplyr)
+```
+
+## Cyclistic_Exercise_Full_Year_Analysis
+
+We'll start by loading the different datasets to use in this analysis
+```{r Loading Data}
+setwd(dir = "D:/Google Data Analytics/Course 8  Rishie/Learning Logs/Dataset case 1/Clean Data/CSV Files")
+
+January <- read_csv("January_2021_v2.csv")
+February <- read_csv("February_2021_v2.csv")
+March <- read_csv("March_2021_v2.csv")
+April <- read_csv("April_2021_v2.csv")
+May <- read_csv("May_2021_v2.csv")
+June <- read_csv("June_2021_v2.csv")
+July <- read_csv("July_2021_v2.csv")
+August <- read_csv("August_2021_v2.csv")
+September <- read_csv("September_2021_v2.csv")
+October <- read_csv("October_2021_v2.csv")
+November <- read_csv("November_2021_v2.csv")
+December <- read_csv("December_2021_v2.csv")
+```
+
+##====================================================
+## STEP 2: WRANGLE DATA AND COMBINE INTO A SINGLE FILE
+##====================================================
+
+# Renaming Columns
+
+First we'll start by renaming some columns so that they match perfectly before we can use a command to join them into one file.
+
+```{r Renaming Columns}
+January <- January %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual)        
+
+February <- February %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual)        
+
+March <- March %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual)        
+
+April <- April %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual, ride_length = ride_lenght)        
+
+May <- May %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual, ride_length = ride_lenght)        
+
+June <- June %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual, ride_length = ride_lenght)        
+
+July <- July %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual, ride_length = ride_lenght)        
+
+August <- August %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual, ride_length = ride_lenght)        
+
+September <- September %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual, ride_length = ride_lenght)        
+
+October <- October %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual, ride_length = ride_lenght)        
+
+November <- November %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual, ride_length = ride_lenght)        
+
+December <- December %>% rename(trip_id = ride_id, bikeid = rideable_type, start_time = started_at, end_time = ended_at, from_station_name = start_station_name, from_station_id = start_station_id, to_station_name = end_station_name, to_station_id = end_station_id, usertype = member_casual, ride_length = ride_lenght)        
+
+```
+
+
+# Converting Data Types
+
+Now lets Convert trip_id and bikeid to character so that they can stack correctly
+
+
+```{r Converting Data types}
+January <- January %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+February <- February %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+March <- March %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+April <- April %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+May <- May %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+June <- June %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+July <- July %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+August <- August %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+September <- September %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+October <- October %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+November <- November %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+December <- December %>% 
+  mutate(trip_id = as.character(trip_id)) %>% 
+  mutate(bikeid = as.character(bikeid))
+
+```
+
+# Merging DataFrames 
+
+Now its time to stack the different dataframes into a single dataframe
+
+```{r Stacking the Data}
+Annual_Trips <- bind_rows(January, February, March, April, May, June, July, August, September, October, November, December)
+```
+
+
+##======================================================
+## STEP 3: CLEAN UP AND ADD DATA TO PREPARE FOR ANALYSIS
+##======================================================
+
+# Deleting unnecessary columns
+
+Annual_Trips <- Annual_Trips %>% 
+  select(-c(start_lat, start_lng, end_lat, end_lng, ride_length_Period))
+
+# Creating and Converting column date frome Character to Date format 
+
+```{r Creating Columns}
+Annual_Trips$date <- as.Date(Annual_Trips$start_time, format = "%m/%d/%Y")
+Annual_Trips$month <- format(as.Date(Annual_Trips$date), "%B")
+Annual_Trips$day <- format(as.Date(Annual_Trips$date), "%d")
+Annual_Trips$year <- format(as.Date(Annual_Trips$date), "%Y")
+Annual_Trips$day_of_week <- format(as.Date(Annual_Trips$date), "%A")
+```
+
+Changing datatype of ride_length from character to numeric for calculations
+
+```{r}
+Annual_Trips$ride_length_Period <- lubridate::hms(Annual_Trips$ride_length)  # First we change it to Period datatype
+
+Annual_Trips$ride_length_Seconds <- period_to_seconds(Annual_Trips$ride_length_Period) # Now use the period_to_seconds function to convert to seconds
+```
+
+Now lets remove unnecessary data (When Bikes where  out for repair or where ride_length is negative)
+
+```{r Deleting Blanks}
+Annual_Trips_v2 <- Annual_Trips[!(Annual_Trips$from_station_name == "HQ QR" | Annual_Trips$ride_length_Seconds < 0),]
+
+```
+
+##=====================================
+## STEP 4: CONDUCT DESCRIPTIVE ANALYSIS
+##=====================================
+
+
+# Descriptive analysis on ride_length (all figures in seconds)
+
+summary(Annual_Trips_v2$ride_length_Seconds)
+
+Compare members and casual users
+
+```{r Comparing UserTypes}
+aggregate(Annual_Trips_v2$ride_length_Seconds ~ Annual_Trips_v2$usertype, FUN = mean)
+aggregate(Annual_Trips_v2$ride_length_Seconds ~ Annual_Trips_v2$usertype, FUN = median)
+aggregate(Annual_Trips_v2$ride_length_Seconds ~ Annual_Trips_v2$usertype, FUN = max)
+aggregate(Annual_Trips_v2$ride_length_Seconds ~ Annual_Trips_v2$usertype, FUN = min)
+
+```
+
+See the average ride time by each day for members vs casual users
+```{r}
+aggregate(Annual_Trips_v2$ride_length_Seconds ~ Annual_Trips_v2$usertype + Annual_Trips_v2$day_of_week, FUN = mean)
+
+```
+
+Notice that the days of the week are out of order. Let's fix that.
+```{r}
+Annual_Trips_v2$day_of_week <- ordered(Annual_Trips_v2$day_of_week, levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+
+```
+
+Now, let's run the average ride time by each day for members vs casual users
+```{r}
+aggregate(Annual_Trips_v2$ride_length_Seconds ~ Annual_Trips_v2$usertype + Annual_Trips_v2$day_of_week, FUN = mean)
+
+```
+
+
+Analyze ridership data by type and weekday
+```{r Analysing Usertype}
+Annual_Trips_v2 %>% 
+  mutate(weekday = wday(Annual_Trips_v2$day_2, label = TRUE)) %>%  #creates weekday field using wday()
+  group_by(usertype, weekday) %>%  #groups by usertype and weekday
+  summarise(number_of_rides = n()							#calculates the number of rides and average duration 
+            ,average_duration = mean(ride_length_Seconds)) %>% 		# calculates the average duration
+  arrange(usertype, weekday)								# sorts
+```
+
+
+
+## Including Plots
+
+# Let's visualize the number of rides by rider type
+
+Checking on how many rides are made per day of the week by each usertype
+
+```{r Plot 1, echo=FALSE}
+Annual_Trips_v2 %>% 
+  mutate(weekday = wday(Annual_Trips_v2$day_2, label = TRUE)) %>% 
+  group_by(usertype, weekday) %>% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length_Seconds)) %>% 
+  arrange(usertype, weekday) %>% 
+  filter(usertype != "NA", weekday != "NA") %>%
+  ggplot(aes(x = weekday, y = number_of_rides, fill = usertype)) +
+  geom_col(position = "dodge") + 
+  ggtitle("Weekly Rides per Usertype")
+```
+
+
+# Let's create a visualization for average duration
+
+Checking on the average duration of each ride made per day of the week by each usertype
+
+```{r Plot 2, echo=FALSE}
+Plot2 <- Annual_Trips_v2 %>% 
+  mutate(weekday = wday(Annual_Trips_v2$day_2, label = TRUE)) %>% 
+  group_by(usertype, weekday) %>% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length_Seconds)) %>% 
+  arrange(usertype, weekday)  %>% 
+  filter(weekday != "NA", average_duration != "NA") %>%
+  ggplot(aes(x = weekday, y = average_duration, fill = usertype)) +
+  geom_col(position = "dodge") +
+  ggtitle("Weekly Average Ride Duration for Users")
+
+```
+
+
+##=================================================
+## STEP 5: EXPORT SUMMARY FILE FOR FURTHER ANALYSIS
+##=================================================
+
+
+Yearly_Data <- aggregate(Annual_Trips_v2$ride_length_Seconds ~ Annual_Trips_v2$usertype + Annual_Trips_v2$day_of_week, FUN = mean)
+
+```{r Saving}
+write.csv(Yearly_Data, file = "Yearly_Data.csv")
+write.csv(Annual_Trips_v2, file ="Annual_Trips_Info.csv")
+write.csv(Annual_Trips_v3, file = "Plot 1.csv")
+write.csv(Plot2, file = "Plot 2.csv")
+```
+
